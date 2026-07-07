@@ -1,11 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 :root {
   --airbnb: #ff385c;
+  --airbnb-2: #ff6b8a;
   --pink: #e61e5b;
   --text: #222222;
   --muted: #6a6a6a;
   --line: #dddddd;
   --soft: #f7f7f7;
-  font-family: "Circular", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: var(--text);
   background: #ffffff;
 }
@@ -17,7 +19,7 @@ body.modal-open { overflow: hidden; }
 button, a { font: inherit; color: inherit; }
 button { border: 0; background: none; cursor: pointer; }
 a { text-underline-offset: 2px; }
-img { display: block; width: 100%; height: 100%; object-fit: cover; }
+img { display: block; width: 100%; height: auto; object-fit: cover; }
 button:focus-visible, a:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
 
 .site-header {
@@ -39,17 +41,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid #111; outline-offset:
     gap: 8px;
     text-decoration: none;
 
-    color: #FF385C;
+    color: var(--airbnb);
     font-size: 34px;
-    font-weight: 500;
+    font-weight: 600;
 
-    /* Closest publicly available fonts */
-    font-family: "Circular Std",
-                 "Avenir Next",
-                 "Helvetica Neue",
-                 Helvetica,
-                 Arial,
-                 sans-serif;
+    font-family: "Inter", "Circular Std", "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .logo img {
@@ -70,7 +66,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid #111; outline-offset:
   height: 48px;
   border: 1px solid #ddd;
   border-radius: 999px;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 14%);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -78,8 +74,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid #111; outline-offset:
 }
 
 .search-pill img { width: 48px; height: 48px; margin-left: 12px; object-fit: contain; }
-.search-pill button { height: 24px; padding: 0 17px; font-weight: 600; border-left: 1px solid #ddd; white-space: nowrap; }
-.search-pill .muted { color: #717171; font-weight: 400; }
+.search-pill button { height: 24px; padding: 0 17px; font-weight: 700; border-left: 1px solid #eee; white-space: nowrap; }
+.search-pill .muted { color: #717171; font-weight: 500; }
 .search-pill .search-round {
   width: 32px;
   height: 32px;
@@ -119,7 +115,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid #111; outline-offset:
 
 .sticky-nav.visible { transform: translateY(0); pointer-events: auto; }
 .sticky-nav > div { display: flex; align-items: center; gap: 25px; }
-.sticky-nav a { height: 68px; display: grid; place-items: center; text-decoration: none; font-weight: 600; }
+.sticky-nav a { height: 68px; display: grid; place-items: center; text-decoration: none; font-weight: 700; }
 .sticky-nav a:hover, .sticky-nav a.active { border-bottom: 2px solid #222; }
 .sticky-book { gap: 18px; line-height: 1.15; }
 .sticky-book strong { font-size: 16px; }
@@ -127,15 +123,15 @@ button:focus-visible, a:focus-visible { outline: 2px solid #111; outline-offset:
 .sticky-book button, .reserve-btn {
   border-radius: 24px;
   color: white;
-  background: linear-gradient(90deg, #e61e4d, #d70466);
-  font-weight: 700;
+  background: linear-gradient(90deg, var(--airbnb), var(--airbnb-2));
+  font-weight: 800;
 }
 .sticky-book button { height: 40px; padding: 0 24px; }
 
 .hero-section { width: 1120px; margin: 32px auto 0; }
 .title-line { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
-h1 { margin: 0; font-size: 26px; line-height: 30px; font-weight: 650; letter-spacing: 0; }
-.hero-actions { display: flex; gap: 4px; }
+h1 { margin: 0; font-size: 26px; line-height: 30px; font-weight: 700; letter-spacing: 0; }
+.hero-actions { display: flex; gap: 6px; }
 .hero-actions button {
   height: 34px;
   padding: 0 10px;
@@ -144,7 +140,7 @@ h1 { margin: 0; font-size: 26px; line-height: 30px; font-weight: 650; letter-spa
   align-items: center;
   gap: 7px;
   text-decoration: underline;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 14px;
 }
 .tooltip { position: relative; }
@@ -190,7 +186,7 @@ h1 { margin: 0; font-size: 26px; line-height: 30px; font-weight: 650; letter-spa
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 14px;
 }
 
@@ -231,7 +227,7 @@ h1 { margin: 0; font-size: 26px; line-height: 30px; font-weight: 650; letter-spa
   place-items: center;
   background: #0f4b34;
   color: #fff;
-  font-size: 7px;
+  font-size: 12px;
   letter-spacing: 0;
 }
 .host-row div span { display: block; margin-top: 6px; color: var(--muted); }
@@ -263,9 +259,9 @@ h1 { margin: 0; font-size: 26px; line-height: 30px; font-weight: 650; letter-spa
 .months { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; }
 .month { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: 22px; text-align: center; align-items: center; }
 .month b { font-size: 13px; font-weight: 600; }
-.month span { height: 42px; display: grid; place-items: center; border-radius: 50%; }
-.selected-date { background: #222; color: #fff; font-weight: 700; }
-.faded { color: #d6d6d6; text-decoration: line-through; }
+.month span { height: 42px; display: grid; place-items: center; border-radius: 50%; width: 42px; margin: 0 auto; }
+.selected-date { background: #111; color: #fff; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+.faded { color: #d6d6d6; opacity: .6; }
 .calendar-foot { margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
 
 .right-col { position: sticky; top: 88px; display: grid; gap: 24px; }
@@ -289,7 +285,7 @@ h1 { margin: 0; font-size: 26px; line-height: 30px; font-weight: 650; letter-spa
 .booking-grid label:last-child { grid-column: 1 / 3; border-top: 1px solid #b0b0b0; }
 .booking-grid span { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; font-size: 14px; font-weight: 400; }
 .cancel-note { margin: 16px 0; height: 36px; border-radius: 8px; display: grid; place-items: center; background: var(--soft); color: #717171; font-size: 14px; }
-.reserve-btn { width: 100%; height: 48px; border-radius: 24px; font-size: 16px; }
+.reserve-btn { width: 100%; height: 48px; border-radius: 24px; font-size: 16px; background: linear-gradient(90deg, var(--airbnb), var(--airbnb-2)); color: #fff; font-weight: 800; border: 0; }
 .reserve-card p { color: #717171; text-align: center; margin: 18px 0 0; }
 .report { color: #717171; justify-self: center; }
 
@@ -303,7 +299,7 @@ h1 { margin: 0; font-size: 26px; line-height: 30px; font-weight: 650; letter-spa
 .reviews-section { scroll-margin-top: 78px; }
 .favourite-score { text-align: center; padding: 8px 0 48px; }
 .score-line { display: flex; justify-content: center; align-items: center; gap: 18px; }
-.score-line strong { font-size: 96px; line-height: 1; letter-spacing: 0; }
+.score-line strong { font-size: 96px; line-height: 1; letter-spacing: 0; font-weight: 800; }
 .laurel { font-size: 78px; line-height: 1; color: #222; text-shadow: 0 8px 15px rgb(0 0 0 / 25%); transform: rotate(20deg); }
 .laurel.right { transform: rotate(-20deg); }
 .favourite-score h2 { font-size: 24px; margin-top: 24px; }
@@ -347,7 +343,7 @@ h1 { margin: 0; font-size: 26px; line-height: 30px; font-weight: 650; letter-spa
 .chip-row small { color: #717171; font-weight: 400; }
 
 .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 76px 92px; margin: 6px 0 40px; }
-.review { display: grid; grid-template-columns: 42px 1fr; column-gap: 12px; align-items: center; }
+.review { display: grid; grid-template-columns: 42px 1fr; column-gap: 12px; align-items: start; }
 .review > div:first-child, .review > img {
   width: 42px;
   height: 42px;
