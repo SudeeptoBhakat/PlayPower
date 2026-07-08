@@ -43,7 +43,26 @@ import {
 } from 'lucide-react';
 import './styles.css';
 
-const asset = (path) => new URL(`./assets/${path}`, import.meta.url).href;
+const images = import.meta.glob('./assets/**/*', { eager: true, import: 'default' });
+
+const asset = (path) => {
+  if (!path) return '';
+  let cleanPath = path;
+  if (cleanPath.startsWith('src/assets/')) {
+    cleanPath = cleanPath.replace('src/assets/', '');
+  } else if (cleanPath.startsWith('assets/')) {
+    cleanPath = cleanPath.replace('assets/', '');
+  }
+  if (cleanPath.startsWith('/')) {
+    cleanPath = cleanPath.substring(1);
+  }
+  // Fix typos and resolve
+  if (cleanPath.startsWith('eedback/')) {
+    cleanPath = cleanPath.replace('eedback/', 'feedback/');
+  }
+  const key = `./assets/${cleanPath}`;
+  return images[key] || '';
+};
 
 const photos = [
   { id: 1, room: 'Living room 1', url: asset('Living room 1.jpeg') },
@@ -223,7 +242,9 @@ const nearbyStays = [
   ['Luxury Casa Bella 1BHK with plunge pool, Calangute', '₹39,942', '4.95', asset('More stays nearby/Luxury Casa Bella 1BHK with plunge pool, Calangute.jpeg')],
   ['Kanso by Earthen Window | Jacuzzi | Terrace | Pool', '₹45,648', '5.0', asset('More stays nearby/Kanso by Earthen Window  Jacuzzi  Terrace  Pool.jpeg')],
   ['Luxury Apt | Private Pool | 6 Mins from Beach', '₹48,786', '4.93', asset('More stays nearby/Luxury Apt Private Pool 6 Mins from Beach.jpeg')],
-  ['Serendipity Cottage - Calm Stay in Calangute-Baga.', '₹22,824', '4.92', asset('More stays nearby/Serendipity Cottage - Calm Stay in Calangute-Baga..jpeg')],
+  ['NAQAB - 1bhk with private pool', '₹42,218', '4.95', asset('More stays nearby/NAQAB - 1bhk with private pool.jpeg')],
+  ['Greentique Luxury Flat with plunge pool, Calangute', '₹44,506', '4.94', asset('More stays nearby/Greentique Luxury Flat with plunge pool, Calangute.jpeg')],
+  ['Beautiful Studio with a view to die for', '₹23,600', '4.91', asset('More stays nearby/Beautiful Studio with a view to die for.jpeg')],
 ];
 
 function App() {
@@ -398,13 +419,41 @@ function StickyNav({ activeSection, visible }) {
 }
 
 function Hero({ onTour }) {
+  const [saved, setSaved] = React.useState(false);
+  const [shareTooltip, setShareTooltip] = React.useState(false);
+  const [savedTooltip, setSavedTooltip] = React.useState(false);
+
+  function handleShare() {
+    setShareTooltip(true);
+    setTimeout(() => setShareTooltip(false), 2000);
+  }
+
+  function handleSave() {
+    const next = !saved;
+    setSaved(next);
+    if (next) {
+      setSavedTooltip(true);
+      setTimeout(() => setSavedTooltip(false), 2000);
+    }
+  }
+
   return (
     <section id="photos" className="hero-section">
       <div className="title-line">
         <h1>Romantic Jacuzzi 1BHK Candolim | Mirashya UG10</h1>
         <div className="hero-actions">
-          <button type="button" className="tooltip" data-tip="Share options"><Share size={15} /> Share</button>
-          <button type="button"><Heart size={16} fill="#ff385c" color="#ff385c" /> Save</button>
+          <button type="button" className="hero-action-btn" onClick={handleShare}>
+            <Share size={15} strokeWidth={2.2} /> Share
+          </button>
+          <button type="button" className={`hero-action-btn${saved ? ' saved' : ''}`} onClick={handleSave}>
+            <Heart
+              size={16}
+              fill={saved ? '#ff385c' : 'none'}
+              color={saved ? '#ff385c' : '#222'}
+              strokeWidth={2}
+            />
+            {saved ? 'Saved' : 'Save'}
+          </button>
         </div>
       </div>
       <div className="real-photo-grid">
@@ -414,10 +463,22 @@ function Hero({ onTour }) {
           </button>
         ))}
         <button type="button" className="all-photos" onClick={onTour}><Grid3X3 size={15} /> Show all photos</button>
+        {/* Bottom-centre action tooltips — appear over the photo grid */}
+        {shareTooltip && (
+          <div className="photo-grid-toast">
+            <Share size={14} /> Share options
+          </div>
+        )}
+        {savedTooltip && (
+          <div className="photo-grid-toast">
+            <Heart size={14} fill="#fff" color="#fff" /> Saved to wishlist
+          </div>
+        )}
       </div>
     </section>
   );
 }
+
 
 function Intro() {
   return (
@@ -444,18 +505,30 @@ function Intro() {
 }
 
 function Feature({ icon: Icon, title, text }) {
-  return <div className="feature-row"><Icon size={24} /><div><strong>{title}</strong><p>{text}</p></div></div>;
+  return (
+    <div className="feature-row">
+      <Icon size={24} />
+      <div>
+        <strong>{title}</strong>
+        <p>{text}</p>
+      </div>
+    </div>
+  );
 }
 
 function Description({ expanded, onToggle }) {
   return (
     <section className="description-block">
       <div className="translate">Some info has been automatically translated. <button type="button">Show original</button></div>
-      <p>
-        🌴 Plan Your Relaxing Holiday at Amor De Goa by Mirashya Homes! ✨ Stay in this cozy 1BHK in the heart of Candolim, featuring a private jacuzzi 🛁 for the perfect unwind. Enjoy high-speed WiFi 💻, Smart TV 📺, pet-friendly comfort 🐾, and stylish interiors. Just minutes from Candolim Beach 🏖️, popular cafés, restaurants, and nightlife 🍹, it’s ideal for couples seeking romance, relaxation, and a touch of luxury in North Goa. ❤️🌴
-        {expanded && ' The apartment is set up for slow mornings, easy evenings and quick access to North Goa beaches.'}
-      </p>
-      <button type="button" className="text-link" onClick={onToggle}>{expanded ? 'Show less' : 'Show more'} <ChevronRight size={18} /></button>
+      <div className={`desc-wrapper${expanded ? '' : ' collapsed'}`}>
+        <p>
+          🌴 Plan Your Relaxing Holiday at Amor De Goa by Mirashya Homes! ✨ Stay in this cozy 1BHK in the heart of Candolim, featuring a private jacuzzi 🛁 for the perfect unwind. Enjoy high-speed WiFi 💻, Smart TV 📺, pet-friendly comfort 🐾, and stylish interiors. Just minutes from Candolim Beach 🏖️, popular cafés, restaurants, and nightlife 🍹, it's ideal for couples seeking romance, relaxation, and a touch of luxury in North Goa. ❤️🌴
+          {expanded && ' The apartment is set up for slow mornings, easy evenings and quick access to North Goa beaches.'}
+        </p>
+      </div>
+      <button type="button" className="text-link" onClick={onToggle}>
+        {expanded ? 'Show less' : 'Show more'} <ChevronRight size={16} />
+      </button>
     </section>
   );
 }
@@ -505,7 +578,7 @@ function CalendarSection() {
         <button aria-label="Next month"><ChevronRight size={18} /></button>
       </div>
       <div className="months">
-        <Month start={4} days={31} selected={[18, 23]} />
+        <Month start={4} days={31} rangeStart={18} rangeEnd={23} />
         <Month start={0} days={30} faded={[18, 19, 20, 21, 22, 23, 24, 29, 30]} />
       </div>
       <div className="calendar-foot"><CalendarDays size={22} /><button>Clear dates</button></div>
@@ -513,12 +586,44 @@ function CalendarSection() {
   );
 }
 
-function Month({ start, days, selected = [], faded = [] }) {
-  const cells = Array.from({ length: start }, (_, i) => <span key={`blank-${i}`} />);
-  for (let day = 1; day <= days; day += 1) {
-    cells.push(<span key={day} className={`${selected.includes(day) ? 'selected-date' : ''} ${faded.includes(day) ? 'faded' : ''}`}>{day}</span>);
+function Month({ start, days, rangeStart, rangeEnd, faded = [] }) {
+  const cells = [];
+  
+  // Add empty slots for the month's start day offset
+  for (let i = 0; i < start; i++) {
+    cells.push(<div key={`blank-${i}`} className="day-cell blank" />);
   }
-  return <div className="month"><b>S</b><b>M</b><b>T</b><b>W</b><b>T</b><b>F</b><b>S</b>{cells}</div>;
+  
+  for (let day = 1; day <= days; day++) {
+    let cellClass = "day-cell";
+    
+    if (rangeStart && rangeEnd) {
+      if (day === rangeStart) {
+        cellClass += " range-start";
+      } else if (day === rangeEnd) {
+        cellClass += " range-end";
+      } else if (day > rangeStart && day < rangeEnd) {
+        cellClass += " range-in-between";
+      }
+    }
+    
+    if (faded.includes(day)) {
+      cellClass += " faded";
+    }
+    
+    cells.push(
+      <div key={day} className={cellClass}>
+        <span className="day-number">{day}</span>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="month">
+      <b>S</b><b>M</b><b>T</b><b>W</b><b>T</b><b>F</b><b>S</b>
+      {cells}
+    </div>
+  );
 }
 
 function Promo() {
@@ -552,9 +657,9 @@ function Reviews() {
     <section id="reviews" className="reviews-section full-section">
       <div className="favourite-score">
         <div className="score-line">
-          <span className="laurel left">❯</span>
-          <strong>4.95</strong>
-          <span className="laurel right">❮</span>
+          <span className='laurel-parant'><img className='laurel left' src={asset('laurel-left.png')} alt="" /></span>
+            <strong>4.95</strong>
+          <span className='laurel-parant'><img className='laurel right' src={asset('laurel-right.png')} alt="" /></span>
         </div>
         <h2>Guest favourite</h2>
         <p>This home is a guest favourite based on ratings, reviews and reliability</p>
@@ -585,16 +690,29 @@ function Reviews() {
 }
 
 function Review({ name, meta, when, text, avatar, showMore }) {
+  console.log(avatar);
+  const [expanded, setExpanded] = React.useState(false);
+  const LIMIT = 180;
+  const isTruncatable = showMore && text.length > LIMIT;
+  const displayText = isTruncatable && !expanded ? text.slice(0, LIMIT) + '\u2026' : text;
+
   return (
     <article className="review">
-      {avatar ? <img src={avatar} alt="" /> : <div>{name[0]}</div>}
+      {avatar
+        ? <img src={avatar} alt={name} />
+        : <div aria-hidden="true">{name[0]}</div>
+      }
       <div className="review-copy">
         <strong>{name}</strong>
         <small>{meta}</small>
       </div>
       <p className="stars">★★★★★ · {when}</p>
-      <p>{text}</p>
-      {showMore && <button type="button" className="inline-link">Show more</button>}
+      <p>{displayText}</p>
+      {isTruncatable && (
+        <button type="button" className="inline-link" onClick={() => setExpanded(v => !v)}>
+          {expanded ? 'Show less' : 'Show more'}
+        </button>
+      )}
     </article>
   );
 }
@@ -688,18 +806,30 @@ function InfoColumn({ icon: Icon, title, lines }) {
 }
 
 function NearbyStays() {
+  const scrollRef = React.useRef(null);
+
+  function scroll(dir) {
+    if (!scrollRef.current) return;
+    const card = scrollRef.current.querySelector('.stay-card');
+    const cardW = card ? card.offsetWidth + 20 : 220;
+    scrollRef.current.scrollBy({ left: dir * cardW * 2, behavior: 'smooth' });
+  }
+
   return (
     <section className="nearby-section full-section">
       <div className="nearby-head">
         <h2>More stays nearby</h2>
-        <div><span>2 / 2</span><button type="button"><ChevronLeft size={18} /></button><button type="button" disabled><ChevronRight size={18} /></button></div>
+        <div>
+          <button type="button" aria-label="Scroll left" onClick={() => scroll(-1)}><ChevronLeft size={18} /></button>
+          <button type="button" aria-label="Scroll right" onClick={() => scroll(1)}><ChevronRight size={18} /></button>
+        </div>
       </div>
-      <div className="nearby-grid">
+      <div className="nearby-grid" ref={scrollRef}>
         {nearbyStays.map(([title, price, rating, img]) => (
           <article className="stay-card" key={title}>
-            <img src={img} alt="" />
+            <img src={img} alt={title} />
             <h3>{title}</h3>
-            <p>{price} <span>★ {rating}</span></p>
+            <p><strong>{price}</strong> <span>★ {rating}</span></p>
           </article>
         ))}
       </div>
